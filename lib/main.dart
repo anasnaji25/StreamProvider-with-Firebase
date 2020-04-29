@@ -33,7 +33,7 @@ class ViewUserPage extends StatelessWidget {
         backgroundColor: Colors.amber,
         title: Text('Stream Provider'),
       ),
-      body: ListView.builder(
+      body: userList == null ? CircularProgressIndicator() :  ListView.builder(
         itemCount: userList.length,
         itemBuilder: (_, int index) => Padding(
           padding: EdgeInsets.all(10.0),
