@@ -23,9 +23,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   final FirebaseAuthenticationServices _firebaseAuthenticationServices = FirebaseAuthenticationServices();
   final _formKey = GlobalKey<FormState>();
-  String error = '';
 
-  // text field state
+  String error = '';
   String email = '';
   String password = '';
   String name = '';
@@ -80,6 +79,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                       setState(() {
                         error = 'Please supply a valid email';
                       });
+                    }else{
+                      print(result);
                     }
                   }
                 },
