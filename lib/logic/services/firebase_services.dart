@@ -1,21 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../model/user_model.dart';
 
 class FirebaseServices {
   Firestore _fireStoreDataBase = Firestore.instance;
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Stream<List<UserModel>> getUserList() {
-    return _fireStoreDataBase.collection('user')
-        .snapshots()
-        .map((snapShot) => snapShot.documents
-        .map((document) => UserModel.fromJson(document.data))
-        .toList());
-  }
 
-  addUser(){
-    var addUserData = Map<String,dynamic>();
-    addUserData['name'] = "Andrew Holder";
-    addUserData['age'] = "31yrs";
-    return _fireStoreDataBase.collection('user').document('user_03').setData(addUserData);
-  }
 }
