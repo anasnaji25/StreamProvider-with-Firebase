@@ -12,6 +12,14 @@ class FirebaseServices {
         .toList());
   }
 
+  Stream<List<UserModel>> getImageList() {
+    return _fireStoreDataBase.collection('images')
+        .snapshots()
+        .map((snapShot) => snapShot.documents
+        .map((document) => UserModel.fromJson(document.data))
+        .toList());
+  }
+
   addUser(){
     var addUserData = Map<String,dynamic>();
     addUserData['name'] = "Andrew Holder";

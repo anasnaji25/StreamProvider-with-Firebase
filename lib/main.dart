@@ -3,22 +3,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterstreamprovider/logic/model/user_model.dart';
 import 'package:flutterstreamprovider/logic/services/firebase_services.dart';
+import 'package:flutterstreamprovider/screen/check_function.dart';
 import 'package:provider/provider.dart';
+import 'logic/model/image_model.dart';
 import 'screen/authenticate_user.dart';
 
 void main() {
   runApp(
-    MaterialApp(
-      home: MyApp(),
-    ),
+    MaterialApp(home:AuthenticateUser(),),
   );
 }
+
+class MyApp1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final FirebaseServices firebaseServices = FirebaseServices();
+    return MaterialApp(
+      home: StreamProvider(
+        create: (BuildContext context) => firebaseServices.getImageList(),
+        child: AuthenticateUser(),
+      ),
+    );
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final FirebaseServices firebaseServices = FirebaseServices();
-
     return MaterialApp(
       home: StreamProvider(
         create: (BuildContext context) => firebaseServices.getUserList(),

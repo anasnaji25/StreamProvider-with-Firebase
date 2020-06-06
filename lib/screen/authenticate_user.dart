@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterstreamprovider/logic/model/image_model.dart';
+import 'package:provider/provider.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -9,7 +14,6 @@ class AuthenticateUser extends StatefulWidget {
 }
 
 class _AuthenticateUserState extends State<AuthenticateUser> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -17,7 +21,6 @@ class _AuthenticateUserState extends State<AuthenticateUser> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
@@ -77,8 +80,8 @@ class _AuthenticateUserState extends State<AuthenticateUser> {
                 ),
               ),
               MaterialButton(
-                onPressed: () async{
-                  if(formKey.currentState.validate()){
+                onPressed: () async {
+                  if (formKey.currentState.validate()) {
                     registerUser();
                   }
                 },
@@ -102,11 +105,60 @@ class _AuthenticateUserState extends State<AuthenticateUser> {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
-    )).user;
+    ))
+        .user;
     if (user != null) {
       setState(() {
         print(user.uid);
       });
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ViewImage(),
+        ),
+      );
     }
+  }
+}
+
+class ViewImage extends StatefulWidget {
+  @override
+  _ViewImageState createState() => _ViewImageState();
+}
+
+class _ViewImageState extends State<ViewImage> {
+
+
+  CollectionReference collectionReference;
+  List<DocumentSnapshot> imageList;
+  StreamSubscription<QuerySnapshot> subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    collectionReference = Firestore.instance.collection('images');
+    subscription = collectionReference.snapshots().listen((data) {
+      setState(() {
+        imageList = data.documents;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: imageList == null ? CircularProgressIndicator() :  ListView.builder(
+        itemCount: imageList.length,
+        itemBuilder: (_, int index) => Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Image.network(imageList[index]['download_url']),
+        ),
+      ),
+    );
   }
 }
