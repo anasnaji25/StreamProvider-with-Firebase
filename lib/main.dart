@@ -135,4 +135,3 @@ class _LoginUserScreenState extends State<LoginUserScreen> {
     );
   }
 }
-
