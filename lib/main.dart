@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterstreamprovider/logic/services/firebase_services.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,6 +20,8 @@ class RegisterUserScreen extends StatefulWidget {
 }
 
 class _RegisterUserScreenState extends State<RegisterUserScreen> {
+
+  final FirebaseAuthenticationServices _firebaseAuthenticationServices = FirebaseAuthenticationServices();
   final _formKey = GlobalKey<FormState>();
   String error = '';
 
@@ -68,7 +71,18 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
               /*Register button*/
               RaisedButton(
                 color: Colors.indigo,
-                onPressed: () {},
+                onPressed: () async {
+                  if(_formKey.currentState.validate()){
+                    dynamic result = await
+                    _firebaseAuthenticationServices
+                        .registerWithEmailAndPassword(name,email,password);
+                    if(result == null) {
+                      setState(() {
+                        error = 'Please supply a valid email';
+                      });
+                    }
+                  }
+                },
                 child: Text('Register'),
               ),
             ],
